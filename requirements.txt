@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+tensorflow-recommenders
+tensorflow==2.12.0
+pandas
+numpy
+pydantic
+pydantic-settings
+scikit-learn

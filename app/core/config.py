@@ -5,7 +5,7 @@ class Settings(BaseSettings):
     MODEL_PATH: str = "models/nunvibe"
     API_PREFIX: str = "/api"
     DEFAULT_K: int = 10
-    CSV_PATH:   str = "top_10000_1950-now.csv"
+    CSV_PATH:   str = "app/top_10000_1950-now.csv"
 
     class Config:
         env_file = ".env"
