@@ -1,0 +1,11 @@
+services:
+  nunvibe-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nunvibe-backend
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/app
+    restart: unless-stopped

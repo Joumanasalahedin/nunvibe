@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+models/
+*.tgz
+*.log
+.DS_Store
+.vscode/
+.idea/
