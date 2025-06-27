@@ -18,3 +18,20 @@ class ContentRecommender:
                   seed_uris: list[str],
                   k: int | None = None) -> list[dict]:
         return self.data.recommend(seed_genres, seed_uris, k or self.default_k)
+
+    def recommend_with_feedback(
+        self,
+        seed_genres: list[str],
+        liked_uris: list[str],
+        disliked_uris: list[str],
+        k: int | None = None
+    ) -> list[dict]:
+        return self.data.recommend_with_feedback(
+            seed_genres,
+            liked_uris,
+            disliked_uris,
+            k or self.default_k
+        )
+
+    def get_track_info(self, uris: list[str]) -> list[dict]:
+        return self.data.get_track_info(uris)

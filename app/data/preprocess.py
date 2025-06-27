@@ -114,3 +114,71 @@ class ContentData:
                     break
 
         return recs
+
+    def recommend_with_feedback(
+        self,
+        seed_genres: list[str],
+        liked_uris: list[str],
+        disliked_uris: list[str],
+        k: int
+    ) -> list[dict]:
+
+        # -- 1) One‐hot genre vector, padded for numeric dims
+        g_vec = self.genre_encoder.transform([seed_genres])[0]
+        pad_len = self.features.shape[1] - len(g_vec)
+        g_full = np.hstack([g_vec, np.zeros(pad_len)])
+
+        # -- 2) Gather liked and disliked vectors
+        def uris_to_vecs(uris):
+            idxs = [self.track_uris.index(u)
+                    for u in uris if u in self.track_uris]
+            return self.features[idxs] if idxs else np.empty((0, self.features.shape[1]))
+
+        liked_vecs = uris_to_vecs(liked_uris)
+        disliked_vecs = uris_to_vecs(disliked_uris)
+
+        # -- 3) Build components: +genre, +likes, –dislikes
+        comps = [g_full]
+        if liked_vecs.size:
+            comps.append(liked_vecs.mean(axis=0))
+        if disliked_vecs.size:
+            comps.append(-disliked_vecs.mean(axis=0))
+
+        # -- 4) Average into one user‐taste vector
+        user_vec = np.vstack(comps).mean(axis=0)[None, :]
+
+        # -- 5) Query KNN (ask for k + seeds so we can filter out both)
+        n_seeds = len(liked_uris) + len(disliked_uris)
+        dists, nbrs = self.knn.kneighbors(user_vec, n_neighbors=k + n_seeds)
+
+        # -- 6) Collect top‐k, skipping any seeds
+        recs = []
+        for idx in nbrs[0]:
+            uri = self.track_uris[idx]
+            if uri in liked_uris or uri in disliked_uris:
+                continue
+            recs.append({
+                "uri":    uri,
+                "name":   self.track_names[idx],
+                "artist": self.artist_names[idx]
+            })
+            if len(recs) >= k:
+                break
+
+        return recs
+
+    def get_track_info(self, uris: list[str]) -> list[dict]:
+        """
+        Given a list of track URIs, return their metadata dicts:
+        [{ uri, name, artist }, …]
+        """
+        infos = []
+        for uri in uris:
+            if uri in self.track_uris:
+                i = self.track_uris.index(uri)
+                infos.append({
+                    "uri":    uri,
+                    "name":   self.track_names[i],
+                    "artist": self.artist_names[i],
+                })
+        return infos

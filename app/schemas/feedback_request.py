@@ -1,0 +1,27 @@
+from pydantic import BaseModel, Field
+from typing import List, Optional
+
+
+class FeedbackRequest(BaseModel):
+    seed_genres: List[str] = Field(
+        ..., description="Initial genres the user selected"
+    )
+    liked_uris: List[str] = Field(
+        [], description="Track URIs the user thumbs-upped"
+    )
+    disliked_uris: List[str] = Field(
+        [], description="Track URIs the user thumbs-downed"
+    )
+    k: Optional[int] = Field(
+        None, ge=1, description="Number of recommendations to return"
+    )
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "seed_genres":    ["pop", "indie rock", "dance pop"],
+                "liked_uris":     ["spotify:track:AAA", "spotify:track:BBB"],
+                "disliked_uris":  ["spotify:track:CCC"],
+                "k": 10
+            }
+        }

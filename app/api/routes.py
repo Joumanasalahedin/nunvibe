@@ -5,6 +5,8 @@ from app.schemas.genre_samples_request import GenreSamplesRequest
 from app.schemas.genre_samples_response import GenreSamplesResponse
 from app.schemas.request import ContentRequest
 from app.schemas.response import ContentResponse
+from app.schemas.feedback_request import FeedbackRequest
+from app.schemas.feedback_response import FeedbackResponse
 
 router = APIRouter()
 get_cr = Depends(lambda: ContentRecommender())
@@ -43,3 +45,30 @@ async def recommend(
         raise HTTPException(
             status_code=500, detail=f"Recommendation error: {e}")
     return ContentResponse(recommendations=recs)
+
+
+@router.post("/recommend/feedback", response_model=FeedbackResponse)
+async def recommend_feedback(
+    req: FeedbackRequest,
+    cr: ContentRecommender = get_cr
+):
+    """
+    Iterative feedback: use initial genres + thumbs-up/down
+    to refine the next batch of recommendations, and return 
+    both the list of liked tracks and the new suggestions.
+    """
+    try:
+        new_recs = cr.recommend_with_feedback(
+            seed_genres=req.seed_genres,
+            liked_uris=req.liked_uris,
+            disliked_uris=req.disliked_uris,
+            k=req.k
+        )
+        liked_tracks = cr.get_track_info(req.liked_uris)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Feedback error: {e}")
+
+    return FeedbackResponse(
+        liked=liked_tracks,
+        recommendations=new_recs
+    )
