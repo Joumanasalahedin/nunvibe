@@ -1,15 +1,12 @@
-from pydantic_settings import BaseSettings
+# API configuration
+API_PREFIX = "/api"
 
+# Dataset and model paths
+CSV_PATH = "app/top_10000_1950-now.csv"
+DEFAULT_K = 10
+MODEL_PATH = "models/knn_model.joblib"
 
-class Settings(BaseSettings):
-    MODEL_PATH: str = "models/nunvibe"
-    API_PREFIX: str = "/api"
-    DEFAULT_K: int = 10
-    CSV_PATH:   str = "app/top_10000_1950-now.csv"
-
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-
-
-settings = Settings()
+# Paths for feedback-driven logistic regression
+FEEDBACK_CSV_PATH = "data/feedback.csv"
+LR_MODEL_PATH = "models/logistic_regression.joblib"
+MIN_FEEDBACK = 10

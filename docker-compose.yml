@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     container_name: nunvibe-backend
     ports:
-      - "8000:80"
+      - "8000:8000"
     volumes:
       - ./:/app
     restart: unless-stopped

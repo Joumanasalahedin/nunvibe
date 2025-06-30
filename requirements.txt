@@ -7,3 +7,4 @@ numpy
 pydantic
 pydantic-settings
 scikit-learn
+joblib
