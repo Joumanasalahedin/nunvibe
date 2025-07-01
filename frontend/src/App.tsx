@@ -18,6 +18,7 @@ const App: FC = () => {
     const [step, setStep] = useState<"genre" | "samples" | "recommend" | "feedback">("genre");
     const [genres, setGenres] = useState<Genre[]>([]);
     const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+    const [search, setSearch] = useState("");
 
     const [sampleSongs, setSampleSongs] = useState<Song[]>([]);
     const [likedSamples, setLikedSamples] = useState<string[]>([]);
@@ -135,6 +136,10 @@ const App: FC = () => {
         }
     };
 
+    const filteredGenres = genres.filter(g =>
+        g.name.toLowerCase().includes(search.toLowerCase())
+    );
+
     return (
         <div className={styles.appContainer}>
             <h1>nunvibe™ Music Recommender</h1>
@@ -143,10 +148,19 @@ const App: FC = () => {
 
             {step === "genre" && (
                 <div>
-                    <h2>Pick 1-3 genres you like</h2>
+                    <div className={styles.genreHeader}>
+                        <h2>Pick 1-3 genres you like</h2>
+                        <input
+                            className={styles.searchBar}
+                            type="text"
+                            placeholder="Search genres..."
+                            value={search}
+                            onChange={e => setSearch(e.target.value)}
+                        />
+                    </div>
                     <div className={styles.genreContainer}>
                         <div className={styles.genreChips}>
-                            {genres.map(g => (
+                            {filteredGenres.map(g => (
                                 <button
                                     key={g.id}
                                     onClick={() => toggleGenre(g.id)}
