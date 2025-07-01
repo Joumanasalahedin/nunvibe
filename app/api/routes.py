@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 
 from app.core.config import DEFAULT_K, FEEDBACK_CSV_PATH
 from app.data.preprocess import ContentData
@@ -11,7 +11,7 @@ from app.schemas import (
     ContentRequest,
     ContentResponse,
     FeedbackRequest,
-    FeedbackResponse
+    FeedbackResponse,
 )
 
 data = ContentData()
@@ -27,9 +27,12 @@ def list_genres():
 
 
 @router.get("/genres/samples", response_model=GenreSamplesResponse)
-def genre_samples(req: GenreSamplesRequest):
+def genre_samples(
+    genres: list[str] = Query(..., description="Selected genres"),
+    limit: int = Query(10, gt=0, description="How many sample tracks to return"),
+):
     """Return example tracks for each genre."""
-    samples = data.sample_popular_by_genres(req.genres, req.limit)
+    samples = data.sample_popular_by_genres(genres, limit)
     return GenreSamplesResponse(samples=samples)
 
 
