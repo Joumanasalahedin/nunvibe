@@ -144,21 +144,23 @@ const App: FC = () => {
             {step === "genre" && (
                 <div>
                     <h2>Pick 1-3 genres you like</h2>
-                    <div className={styles.genreChips}>
-                        {genres.map(g => (
-                            <button
-                                key={g.id}
-                                onClick={() => toggleGenre(g.id)}
-                                className={
-                                    selectedGenres.includes(g.id)
-                                        ? `${styles.genreChip} ${styles.selected}`
-                                        : styles.genreChip
-                                }
-                                disabled={loading}
-                            >
-                                {g.name}
-                            </button>
-                        ))}
+                    <div className={styles.genreContainer}>
+                        <div className={styles.genreChips}>
+                            {genres.map(g => (
+                                <button
+                                    key={g.id}
+                                    onClick={() => toggleGenre(g.id)}
+                                    className={
+                                        selectedGenres.includes(g.id)
+                                            ? `${styles.genreChip} ${styles.selected}`
+                                            : styles.genreChip
+                                    }
+                                    disabled={loading}
+                                >
+                                    {g.name}
+                                </button>
+                            ))}
+                        </div>
                     </div>
                     <button
                         onClick={fetchSamples}

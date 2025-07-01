@@ -38,11 +38,39 @@ h2 {
   margin-bottom: 18px;
 }
 
+.genreContainer {
+  max-height: 60vh;
+  overflow-y: auto;
+  border: 2px solid var(--gray);
+  border-radius: var(--border-radius);
+  padding: 16px;
+  margin-bottom: 20px;
+  background: rgba(35, 35, 35, 0.3);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.genreContainer::-webkit-scrollbar {
+  width: 8px;
+}
+
+.genreContainer::-webkit-scrollbar-track {
+  background: var(--gray);
+  border-radius: 4px;
+}
+
+.genreContainer::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 4px;
+}
+
+.genreContainer::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
 .genreChips {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-bottom: 20px;
 }
 
 .genreChip {
