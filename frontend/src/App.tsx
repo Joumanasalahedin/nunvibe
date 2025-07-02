@@ -31,6 +31,9 @@ const App: FC = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    const [showModal, setShowModal] = useState(false);
+    const currentYear = new Date().getFullYear();
+
     useEffect(() => {
         fetch(`${API_BASE}/api/genres`)
             .then(res => res.json())
@@ -331,6 +334,87 @@ const App: FC = () => {
                     >
                         Recommend More
                     </button>
+                </div>
+            )}
+
+            <footer className={styles.footer}>
+                <div className={styles.footerContent}>
+                    <div className={styles.footerText}>
+                        <strong>nunvibe™</strong> {currentYear}, a project by <strong>Joumana</strong> and <strong>Somto</strong>
+                    </div>
+                    <div className={styles.footerIcons}>
+                        <GenericIcon
+                            icon="info"
+                            onClick={() => setShowModal(true)}
+                            className={styles.footerIcon}
+                            onHoverStyle={{
+                                transform: "scale(1.1)",
+                                color: "var(--primary)"
+                            }}
+                        />
+                        <GenericIcon
+                            icon="github"
+                            onClick={() => window.open("https://github.com/Joumanasalahedin/nunvibe", "_blank")}
+                            className={styles.footerIcon}
+                            onHoverStyle={{
+                                transform: "scale(1.1)",
+                                color: "var(--primary)"
+                            }}
+                        />
+                        <GenericIcon
+                            icon="email"
+                            onClick={() => window.open("mailto:somtochukwu.mbuko@stud.th-deg.de", "_blank")}
+                            className={styles.footerIcon}
+                            onHoverStyle={{
+                                transform: "scale(1.1)",
+                                color: "var(--primary)"
+                            }}
+                        />
+                    </div>
+                </div>
+            </footer>
+
+            {showModal && (
+                <div className={styles.modalOverlay} onClick={() => setShowModal(false)}>
+                    <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+                        <div className={styles.modalHeader}>
+                            <h3>About nunvibe™</h3>
+                            <button
+                                className={styles.modalClose}
+                                onClick={() => setShowModal(false)}
+                            >
+                                &times;
+                            </button>
+                        </div>
+                        <div className={styles.modalContent}>
+                            <p>
+                                nunvibe™ is an intelligent music recommendation system that learns your taste
+                                through genre selection and song feedback to provide personalized music suggestions.
+                            </p>
+                            <p>
+                                Our AI-powered algorithm analyzes your preferences to discover new songs
+                                that match your unique musical taste.
+                            </p>
+                            <div className={styles.modalLinks}>
+                                <a
+                                    href="https://github.com/Joumanasalahedin/nunvibe"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={styles.modalLink}
+                                >
+                                    <GenericIcon icon="github" className={styles.modalLinkIcon} />
+                                    View on GitHub
+                                </a>
+                                <a
+                                    href="mailto:somtochukwu.mbuko@stud.th-deg.de"
+                                    className={styles.modalLink}
+                                >
+                                    <GenericIcon icon="email" className={styles.modalLinkIcon} />
+                                    Contact Us
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>
