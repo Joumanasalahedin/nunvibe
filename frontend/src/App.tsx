@@ -71,11 +71,23 @@ const App: FC = () => {
 
     const handleSampleFeedback = (id: string, liked: boolean) => {
         if (liked) {
-            setLikedSamples(prev => prev.includes(id) ? prev : [...prev, id]);
-            setDislikedSamples(prev => prev.filter(sid => sid !== id));
+            if (likedSamples.includes(id)) {
+                // Deselect if already liked
+                setLikedSamples(prev => prev.filter(sid => sid !== id));
+            } else {
+                // Select like and remove from disliked
+                setLikedSamples(prev => [...prev, id]);
+                setDislikedSamples(prev => prev.filter(sid => sid !== id));
+            }
         } else {
-            setDislikedSamples(prev => prev.includes(id) ? prev : [...prev, id]);
-            setLikedSamples(prev => prev.filter(sid => sid !== id));
+            if (dislikedSamples.includes(id)) {
+                // Deselect if already disliked
+                setDislikedSamples(prev => prev.filter(sid => sid !== id));
+            } else {
+                // Select dislike and remove from liked
+                setDislikedSamples(prev => [...prev, id]);
+                setLikedSamples(prev => prev.filter(sid => sid !== id));
+            }
         }
     };
 
@@ -103,11 +115,23 @@ const App: FC = () => {
 
     const handleRecFeedback = (id: string, liked: boolean) => {
         if (liked) {
-            setLikedRecs(prev => prev.includes(id) ? prev : [...prev, id]);
-            setDislikedRecs(prev => prev.filter(sid => sid !== id));
+            if (likedRecs.includes(id)) {
+                // Deselect if already liked
+                setLikedRecs(prev => prev.filter(sid => sid !== id));
+            } else {
+                // Select like and remove from disliked
+                setLikedRecs(prev => [...prev, id]);
+                setDislikedRecs(prev => prev.filter(sid => sid !== id));
+            }
         } else {
-            setDislikedRecs(prev => prev.includes(id) ? prev : [...prev, id]);
-            setLikedRecs(prev => prev.filter(sid => sid !== id));
+            if (dislikedRecs.includes(id)) {
+                // Deselect if already disliked
+                setDislikedRecs(prev => prev.filter(sid => sid !== id));
+            } else {
+                // Select dislike and remove from liked
+                setDislikedRecs(prev => [...prev, id]);
+                setLikedRecs(prev => prev.filter(sid => sid !== id));
+            }
         }
     };
 
@@ -224,7 +248,6 @@ const App: FC = () => {
                                             : styles.feedbackBtn
                                     }
                                     onHoverStyle={{
-                                        color: "var(--green)",
                                         transform: "scale(var(--scale))"
                                     }}
                                 />
@@ -237,7 +260,6 @@ const App: FC = () => {
                                             : styles.feedbackBtn
                                     }
                                     onHoverStyle={{
-                                        color: "var(--red)",
                                         transform: "scale(var(--scale))"
                                     }}
                                 />
@@ -272,7 +294,6 @@ const App: FC = () => {
                                             : styles.feedbackBtn
                                     }
                                     onHoverStyle={{
-                                        color: "var(--green)",
                                         transform: "scale(var(--scale))"
                                     }}
                                 />
@@ -285,7 +306,6 @@ const App: FC = () => {
                                             : styles.feedbackBtn
                                     }
                                     onHoverStyle={{
-                                        color: "var(--red)",
                                         transform: "scale(var(--scale))"
                                     }}
                                 />
