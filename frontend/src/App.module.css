@@ -139,9 +139,9 @@ box-shadow: 0 0 0 2px var(--primary);
   cursor: not-allowed;
 }
 
-.sampleDescription {
+.description {
   color: var(--accent);
-  margin-bottom: 12px;
+  margin-bottom: 1.5rem;
 }
 
 .songList {
@@ -167,11 +167,11 @@ box-shadow: 0 0 0 2px var(--primary);
   flex: 1;
   font-size: 1.08rem;
   font-weight: 600;
+  margin-bottom: 0.5rem;
 }
 .songArtist {
-  color: var(--primary);
+  color: var(--light);
   font-size: 0.98rem;
-  margin-left: 6px;
 }
 
 .feedbackBtn {
@@ -259,4 +259,13 @@ box-shadow: 0 0 0 2px var(--primary);
   font-size: 0.9rem;
   font-weight: 600;
   box-shadow: 0 2px 4px rgba(255, 153, 0, 0.2);
+}
+
+.artistIcon {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  margin-right: 6px;
+  margin-bottom: 2px;
+  filter: brightness(1.2);
 }

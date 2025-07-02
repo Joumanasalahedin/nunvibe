@@ -229,15 +229,18 @@ const App: FC = () => {
             {step === "samples" && (
                 <div>
                     <h2>Sample Songs</h2>
-                    <p className={styles.sampleDescription}>
-                        Like or dislike songs to help us recommend better music for you.
+                    <p className={styles.description}>
+                        Like or dislike songs to help us recommend better music for you!
                     </p>
                     <ul className={styles.songList}>
                         {Array.isArray(sampleSongs) && sampleSongs.length > 0 ? sampleSongs.map(song => (
                             <li key={song.uri} className={styles.songItem}>
                                 <div className={styles.songInfo}>
                                     <div className={styles.songTitle}>{song.name}</div>
-                                    <div className={styles.songArtist}>by {song.artist}</div>
+                                    <div className={styles.songArtist}>
+                                        <img src="/artist-icon.png" alt="artist" className={styles.artistIcon} />
+                                        {song.artist}
+                                    </div>
                                 </div>
                                 <GenericIcon
                                     icon="like"
@@ -281,10 +284,19 @@ const App: FC = () => {
             {step === "recommend" && (
                 <div>
                     <h2>Recommended Songs</h2>
+                    <p className={styles.description}>
+                        Like or dislike songs to help us recommend better music for you!
+                    </p>
                     <ul className={styles.songList}>
                         {recommendations.map(song => (
                             <li key={song.uri} className={styles.songItem}>
-                                <span className={styles.songTitle}>{song.name}<span className={styles.songArtist}>by {song.artist}</span></span>
+                                <div className={styles.songInfo}>
+                                    <div className={styles.songTitle}>{song.name}</div>
+                                    <div className={styles.songArtist}>
+                                        <img src="/artist-icon.png" alt="artist" className={styles.artistIcon} />
+                                        {song.artist}
+                                    </div>
+                                </div>
                                 <GenericIcon
                                     icon="like"
                                     onClick={() => handleRecFeedback(song.uri, true)}
