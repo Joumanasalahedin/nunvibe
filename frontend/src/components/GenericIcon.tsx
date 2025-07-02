@@ -98,6 +98,59 @@ const GenericIcon: FC<GenericIconProps> = ({
         );
     }
 
+    if (icon === 'info') {
+        return (
+            <svg
+                width={width}
+                height={height}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                viewBox="0 0 24 24"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                xmlns="http://www.w3.org/2000/svg"
+                className={className}
+                style={{
+                    cursor: onClick ? 'pointer' : 'default',
+                    ...(isHovered && onHoverStyle)
+                }}
+                onClick={onClick}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+            >
+                <path d='M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0' />
+                <path d='M12 16v-5h-.5m0 5h1M12 8.5V8' />
+            </svg>
+        );
+    }
+
+    if (icon === 'email') {
+        return (
+            <svg
+                width={width}
+                height={height}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                viewBox="0 0 24 24"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                xmlns="http://www.w3.org/2000/svg"
+                className={className}
+                style={{
+                    cursor: onClick ? 'pointer' : 'default',
+                    ...(isHovered && onHoverStyle)
+                }}
+                onClick={onClick}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+            >
+                <path d='m2.357 7.714 6.98 4.654c.963.641 1.444.962 1.964 1.087.46.11.939.11 1.398 0 .52-.125 1.001-.446 1.964-1.087l6.98-4.654M7.157 19.5h9.686c1.68 0 2.52 0 3.162-.327a3 3 0 0 0 1.31-1.311c.328-.642.328-1.482.328-3.162V9.3c0-1.68 0-2.52-.327-3.162a3 3 0 0 0-1.311-1.311c-.642-.327-1.482-.327-3.162-.327H7.157c-1.68 0-2.52 0-3.162.327a3 3 0 0 0-1.31 1.311c-.328.642-.328 1.482-.328 3.162v5.4c0 1.68 0 2.52.327 3.162a3 3 0 0 0 1.311 1.311c.642.327 1.482.327 3.162.327' />
+            </svg>
+        );
+    }
+
     return null;
 };
 
