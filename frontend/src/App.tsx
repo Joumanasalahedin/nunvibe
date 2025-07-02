@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from "react";
+import GenericIcon from "./components/GenericIcon";
 import styles from "./App.module.css";
 
 interface Genre {
@@ -176,6 +177,21 @@ const App: FC = () => {
                             ))}
                         </div>
                     </div>
+                    {selectedGenres.length > 0 && (
+                        <div className={styles.selectedGenres}>
+                            <span className={styles.selectedLabel}>Selected:</span>
+                            <div className={styles.selectedGenreList}>
+                                {selectedGenres.map(genreId => {
+                                    const genre = genres.find(g => g.id === genreId);
+                                    return (
+                                        <span key={genreId} className={styles.selectedGenre}>
+                                            {genre?.name}
+                                        </span>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
                     <button
                         onClick={fetchSamples}
                         disabled={selectedGenres.length === 0 || selectedGenres.length > 3 || loading}
@@ -189,35 +205,45 @@ const App: FC = () => {
             {step === "samples" && (
                 <div>
                     <h2>Sample Songs</h2>
-                    <p style={{ color: "var(--accent)", marginBottom: 12 }}>Like or dislike songs to help us recommend better music for you.</p>
+                    <p className={styles.sampleDescription}>
+                        Like or dislike songs to help us recommend better music for you.
+                    </p>
                     <ul className={styles.songList}>
                         {Array.isArray(sampleSongs) && sampleSongs.length > 0 ? sampleSongs.map(song => (
                             <li key={song.uri} className={styles.songItem}>
-                                <div style={{ flex: 1 }}>
+                                <div className={styles.songInfo}>
                                     <div className={styles.songTitle}>{song.name}</div>
                                     <div className={styles.songArtist}>by {song.artist}</div>
                                 </div>
-                                <button
+                                <GenericIcon
+                                    icon="like"
                                     onClick={() => handleSampleFeedback(song.uri, true)}
                                     className={
                                         likedSamples.includes(song.uri)
                                             ? `${styles.feedbackBtn} ${styles.liked}`
                                             : styles.feedbackBtn
                                     }
-                                    aria-label="Like"
-                                >👍</button>
-                                <button
+                                    onHoverStyle={{
+                                        color: "var(--green)",
+                                        transform: "scale(var(--scale))"
+                                    }}
+                                />
+                                <GenericIcon
+                                    icon="dislike"
                                     onClick={() => handleSampleFeedback(song.uri, false)}
                                     className={
                                         dislikedSamples.includes(song.uri)
                                             ? `${styles.feedbackBtn} ${styles.disliked}`
                                             : styles.feedbackBtn
                                     }
-                                    aria-label="Dislike"
-                                >👎</button>
+                                    onHoverStyle={{
+                                        color: "var(--red)",
+                                        transform: "scale(var(--scale))"
+                                    }}
+                                />
                             </li>
                         )) : (
-                            <li style={{ color: "var(--accent)", textAlign: "center", padding: "2rem 0" }}>No samples found.</li>
+                            <li className={styles.noSamples}>No samples found.</li>
                         )}
                     </ul>
                     <button
@@ -237,24 +263,32 @@ const App: FC = () => {
                         {recommendations.map(song => (
                             <li key={song.uri} className={styles.songItem}>
                                 <span className={styles.songTitle}>{song.name}<span className={styles.songArtist}>by {song.artist}</span></span>
-                                <button
+                                <GenericIcon
+                                    icon="like"
                                     onClick={() => handleRecFeedback(song.uri, true)}
                                     className={
                                         likedRecs.includes(song.uri)
                                             ? `${styles.feedbackBtn} ${styles.liked}`
                                             : styles.feedbackBtn
                                     }
-                                    aria-label="Like"
-                                >👍</button>
-                                <button
+                                    onHoverStyle={{
+                                        color: "var(--green)",
+                                        transform: "scale(var(--scale))"
+                                    }}
+                                />
+                                <GenericIcon
+                                    icon="dislike"
                                     onClick={() => handleRecFeedback(song.uri, false)}
                                     className={
                                         dislikedRecs.includes(song.uri)
                                             ? `${styles.feedbackBtn} ${styles.disliked}`
                                             : styles.feedbackBtn
                                     }
-                                    aria-label="Dislike"
-                                >👎</button>
+                                    onHoverStyle={{
+                                        color: "var(--red)",
+                                        transform: "scale(var(--scale))"
+                                    }}
+                                />
                             </li>
                         ))}
                     </ul>
