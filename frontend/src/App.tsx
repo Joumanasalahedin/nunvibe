@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import GenericIcon from "./components/GenericIcon";
 import styles from "./App.module.css";
+import { useMediaQuery } from "react-responsive";
 
 interface Genre {
     id: string;
@@ -33,6 +34,9 @@ const App: FC = () => {
 
     const [showModal, setShowModal] = useState(false);
     const currentYear = new Date().getFullYear();
+
+    const isMobile = useMediaQuery({ maxWidth: 767 });
+    const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 1023 });
 
     useEffect(() => {
         fetch(`${API_BASE}/api/genres`)
@@ -170,7 +174,7 @@ const App: FC = () => {
 
     return (
         <div className={styles.appContainer}>
-            <h1>nunvibe™ Music Recommender</h1>
+            <h1>nunvibe™</h1>
             {error && <div className={styles.error}>{error}</div>}
             {loading && <div className={styles.loading}>Loading...</div>}
 
@@ -340,7 +344,15 @@ const App: FC = () => {
             <footer className={styles.footer}>
                 <div className={styles.footerContent}>
                     <div className={styles.footerText}>
-                        <strong>nunvibe™</strong> {currentYear}, a project by <strong>Joumana</strong> and <strong>Somto</strong>
+                        {isTablet || isMobile ? (
+                            <>
+                                <strong>nunvibe™</strong> Music Recommender &copy; {currentYear} <br /> A project by <strong>Joumana</strong> and <strong>Somto</strong>
+                            </>
+                        ) : (
+                            <>
+                                <strong>nunvibe™</strong> Music Recommender &copy; {currentYear}, a project by <strong>Joumana</strong> and <strong>Somto</strong>
+                            </>
+                        )}
                     </div>
                     <div className={styles.footerIcons}>
                         <GenericIcon
