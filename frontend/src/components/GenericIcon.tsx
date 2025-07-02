@@ -1,0 +1,104 @@
+import { FC, useState } from 'react';
+
+interface GenericIconProps {
+    icon: string;
+    onClick?: () => void;
+    onHoverStyle?: React.CSSProperties;
+    className?: string;
+    width?: number | string;
+    height?: number | string;
+}
+
+const GenericIcon: FC<GenericIconProps> = ({
+    icon,
+    onClick,
+    onHoverStyle,
+    className = '',
+    width = 24,
+    height = 24
+}) => {
+    const [isHovered, setIsHovered] = useState(false);
+
+    if (icon === 'github') {
+        return (
+            <svg
+                width={width}
+                height={height}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                viewBox="0 0 24 24"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                xmlns="http://www.w3.org/2000/svg"
+                className={className}
+                style={{
+                    cursor: onClick ? 'pointer' : 'default',
+                    ...(isHovered && onHoverStyle)
+                }}
+                onClick={onClick}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+            >
+                <path d='M3.5 15.668q.675.081 1 .618c.326.537 1.537 2.526 2.913 2.526H9.5m5.672-3.513q.823 1.078.823 1.936V21m-5.625-5.609q-.87.954-.869 1.813V21' />
+                <path d='M15.172 15.299c1.202-.25 2.293-.682 3.14-1.316 1.448-1.084 2.188-2.758 2.188-4.411 0-1.16-.44-2.243-1.204-3.16-.425-.511.819-3.872-.286-3.359-1.105.514-2.725 1.198-3.574.947-.909-.268-1.9-.416-2.936-.416-.9 0-1.766.111-2.574.317-1.174.298-2.296-.363-3.426-.848-1.13-.484-.513 3.008-.849 3.422C4.921 7.38 4.5 8.44 4.5 9.572c0 1.653.895 3.327 2.343 4.41.965.722 2.174 1.183 3.527 1.41' />
+            </svg>
+        );
+    }
+
+    if (icon === 'like') {
+        return (
+            <svg
+                width={width}
+                height={height}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                viewBox="0 0 24 24"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                xmlns="http://www.w3.org/2000/svg"
+                className={className}
+                style={{
+                    cursor: onClick ? 'pointer' : 'default',
+                    ...(isHovered && onHoverStyle)
+                }}
+                onClick={onClick}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+            >
+                <path d='M14.54 10.105h5.533c2.546 0-.764 10.895-2.588 10.895H4.964A.956.956 0 0 1 4 20.053v-9.385c0-.347.193-.666.502-.832C6.564 8.73 8.983 7.824 10.18 5.707l1.28-2.266A.87.87 0 0 1 12.222 3c3.18 0 2.237 4.63 1.805 6.47a.52.52 0 0 0 .513.635' />
+            </svg>
+        );
+    }
+
+    if (icon === 'dislike') {
+        return (
+            <svg
+                width={width}
+                height={height}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                viewBox="0 0 24 24"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                xmlns="http://www.w3.org/2000/svg"
+                className={className}
+                style={{
+                    cursor: onClick ? 'pointer' : 'default',
+                    ...(isHovered && onHoverStyle)
+                }}
+                onClick={onClick}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+            >
+                <path d='M10.46 13.895H4.927C2.381 13.895 5.691 3 7.515 3h12.521c.532 0 .964.424.964.947v9.385a.95.95 0 0 1-.502.832c-2.062 1.106-4.481 2.012-5.678 4.129l-1.28 2.266a.87.87 0 0 1-.762.441c-3.18 0-2.237-4.63-1.805-6.47a.52.52 0 0 0-.513-.635' />
+            </svg>
+        );
+    }
+
+    return null;
+};
+
+export default GenericIcon;
