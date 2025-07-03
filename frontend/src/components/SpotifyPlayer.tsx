@@ -5,9 +5,20 @@ import styles from "./SpotifyPlayer.module.css";
 interface SpotifyPlayerProps {
     uri: string;
     onClose?: () => void;
+    isLiked?: boolean;
+    isDisliked?: boolean;
+    onLike?: () => void;
+    onDislike?: () => void;
 }
 
-const SpotifyPlayer: FC<SpotifyPlayerProps> = ({ uri, onClose }) => {
+const SpotifyPlayer: FC<SpotifyPlayerProps> = ({
+    uri,
+    onClose,
+    isLiked,
+    isDisliked,
+    onLike,
+    onDislike
+}) => {
     const embedRef = useRef<HTMLDivElement>(null);
     const spotifyEmbedControllerRef = useRef<any>(null);
     const [iFrameAPI, setIFrameAPI] = useState<any>(undefined);
@@ -86,25 +97,38 @@ const SpotifyPlayer: FC<SpotifyPlayerProps> = ({ uri, onClose }) => {
 
     return (
         <div className={styles.container}>
-            <div ref={embedRef} className={styles.embed} />
-            {!playerLoaded && <p className={styles.loading}>Loading Spotify Player...</p>}
-            <div className={styles.controls}>
+            <div className={styles.topRow}>
                 {onClose && (
-                    <GenericIcon
-                        icon="close"
+                    <button
                         onClick={onClose}
                         className={styles.closeButton}
-                        onHoverStyle={{ transform: "scale(1.1)" }}
-                    />
+                    >
+                        &times;
+                    </button>
                 )}
                 <button
                     aria-label={isPlaying ? "Stop" : "Play"}
                     onClick={handlePlayStop}
                     className={isPlaying ? styles.pauseButton : styles.playButton}
+                    style={{ minWidth: 80, fontWeight: 700 }}
                 >
                     {isPlaying ? "Stop" : "Play"}
                 </button>
+                <GenericIcon
+                    icon="like"
+                    onClick={onLike}
+                    className={isLiked ? `${styles.feedbackBtn} ${styles.liked}` : styles.feedbackBtn}
+                    onHoverStyle={{ transform: "scale(1.1)" }}
+                />
+                <GenericIcon
+                    icon="dislike"
+                    onClick={onDislike}
+                    className={isDisliked ? `${styles.feedbackBtn} ${styles.disliked}` : styles.feedbackBtn}
+                    onHoverStyle={{ transform: "scale(1.1)" }}
+                />
             </div>
+            <div ref={embedRef} className={styles.embed} />
+            {!playerLoaded && <p className={styles.loading}>Loading Spotify Player...</p>}
         </div>
     );
 };

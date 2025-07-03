@@ -455,6 +455,30 @@ const App: FC = () => {
                         <SpotifyPlayer
                             uri={spotifyPlayerUri}
                             onClose={() => setSpotifyPlayerUri(null)}
+                            isLiked={
+                                step === "samples"
+                                    ? likedSamples.includes(spotifyPlayerUri)
+                                    : likedRecs.includes(spotifyPlayerUri)
+                            }
+                            isDisliked={
+                                step === "samples"
+                                    ? dislikedSamples.includes(spotifyPlayerUri)
+                                    : dislikedRecs.includes(spotifyPlayerUri)
+                            }
+                            onLike={() => {
+                                if (step === "samples") {
+                                    handleSampleFeedback(spotifyPlayerUri, true);
+                                } else {
+                                    handleRecFeedback(spotifyPlayerUri, true);
+                                }
+                            }}
+                            onDislike={() => {
+                                if (step === "samples") {
+                                    handleSampleFeedback(spotifyPlayerUri, false);
+                                } else {
+                                    handleRecFeedback(spotifyPlayerUri, false);
+                                }
+                            }}
                         />
                     </div>
                 )}

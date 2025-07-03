@@ -14,8 +14,59 @@
   max-width: 420px;
 }
 
+.topRow {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  justify-content: flex-start;
+  padding-bottom: 12px;
+  position: relative;
+}
+
 .closeButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #333;
+  border: none;
   color: #fff;
+  font-size: 1.7rem;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  z-index: 2;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.closeButton:hover {
+  background: #1db954;
+  color: #fff;
+}
+
+.feedbackBtn {
+  border: none;
+  background: transparent;
+  font-size: 2rem;
+  cursor: pointer;
+  transition: transform 0.1s;
+  margin-left: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.feedbackBtn.liked {
+  color: var(--green);
+  transform: scale(var(--scale));
+}
+.feedbackBtn.disliked {
+  color: var(--red);
+  transform: scale(var(--scale));
+}
+.feedbackBtn:not(.liked):not(.disliked) {
+  color: var(--light);
 }
 
 .embed {
