@@ -64,6 +64,48 @@ const App: FC = () => {
         setSongCount(clampedValue);
     };
 
+    const filteredGenres = genres.filter(g =>
+        g.name.toLowerCase().includes(search.toLowerCase())
+    );
+
+    const handleUserLikeDislikeAction = (
+        id: string,
+        liked: boolean,
+        type: 'sample' | 'recommendation'
+    ) => {
+        const stateConfig = {
+            sample: {
+                liked: { getter: likedSamples, setter: setLikedSamples },
+                disliked: { getter: dislikedSamples, setter: setDislikedSamples }
+            },
+            recommendation: {
+                liked: { getter: likedRecs, setter: setLikedRecs },
+                disliked: { getter: dislikedRecs, setter: setDislikedRecs }
+            }
+        };
+
+        const config = stateConfig[type];
+        const targetState = liked ? config.liked : config.disliked;
+        const oppositeState = liked ? config.disliked : config.liked;
+
+        if (targetState.getter.includes(id)) {
+            targetState.setter(prev => prev.filter(sid => sid !== id));
+        } else {
+            targetState.setter(prev => [...prev, id]);
+            oppositeState.setter(prev => prev.filter(sid => sid !== id));
+        }
+    };
+
+    const handleSampleFeedback = (
+        id: string,
+        liked: boolean
+    ) => handleUserLikeDislikeAction(id, liked, 'sample');
+
+    const handleRecFeedback = (
+        id: string,
+        liked: boolean
+    ) => handleUserLikeDislikeAction(id, liked, 'recommendation');
+
     // TODO @Joumana: verify all API endpoints payloads
 
     const fetchSamples = async () => {
@@ -81,24 +123,6 @@ const App: FC = () => {
             setError("Failed to fetch sample songs.");
         } finally {
             setLoading(false);
-        }
-    };
-
-    const handleSampleFeedback = (id: string, liked: boolean) => {
-        if (liked) {
-            if (likedSamples.includes(id)) {
-                setLikedSamples(prev => prev.filter(sid => sid !== id));
-            } else {
-                setLikedSamples(prev => [...prev, id]);
-                setDislikedSamples(prev => prev.filter(sid => sid !== id));
-            }
-        } else {
-            if (dislikedSamples.includes(id)) {
-                setDislikedSamples(prev => prev.filter(sid => sid !== id));
-            } else {
-                setDislikedSamples(prev => [...prev, id]);
-                setLikedSamples(prev => prev.filter(sid => sid !== id));
-            }
         }
     };
 
@@ -123,24 +147,6 @@ const App: FC = () => {
             setError("Failed to fetch recommendations.");
         } finally {
             setLoading(false);
-        }
-    };
-
-    const handleRecFeedback = (id: string, liked: boolean) => {
-        if (liked) {
-            if (likedRecs.includes(id)) {
-                setLikedRecs(prev => prev.filter(sid => sid !== id));
-            } else {
-                setLikedRecs(prev => [...prev, id]);
-                setDislikedRecs(prev => prev.filter(sid => sid !== id));
-            }
-        } else {
-            if (dislikedRecs.includes(id)) {
-                setDislikedRecs(prev => prev.filter(sid => sid !== id));
-            } else {
-                setDislikedRecs(prev => [...prev, id]);
-                setLikedRecs(prev => prev.filter(sid => sid !== id));
-            }
         }
     };
 
@@ -170,10 +176,6 @@ const App: FC = () => {
             setLoading(false);
         }
     };
-
-    const filteredGenres = genres.filter(g =>
-        g.name.toLowerCase().includes(search.toLowerCase())
-    );
 
     const songCountSlider = (
         <div className={styles.songCountSelector}>
