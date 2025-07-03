@@ -9,6 +9,8 @@ interface SpotifyPlayerProps {
     isDisliked?: boolean;
     onLike?: () => void;
     onDislike?: () => void;
+    autoPlay?: boolean;
+    onDidAutoPlay?: () => void;
 }
 
 const SpotifyPlayer: FC<SpotifyPlayerProps> = ({
@@ -17,7 +19,9 @@ const SpotifyPlayer: FC<SpotifyPlayerProps> = ({
     isLiked,
     isDisliked,
     onLike,
-    onDislike
+    onDislike,
+    autoPlay,
+    onDidAutoPlay
 }) => {
     const embedRef = useRef<HTMLDivElement>(null);
     const spotifyEmbedControllerRef = useRef<any>(null);
@@ -25,6 +29,8 @@ const SpotifyPlayer: FC<SpotifyPlayerProps> = ({
     const [playerLoaded, setPlayerLoaded] = useState(false);
     const [currentUri, setCurrentUri] = useState(uri);
     const [isPlaying, setIsPlaying] = useState(false);
+
+    const autoPlayRef = useRef<string | null>(null);
 
     useEffect(() => {
         const script = document.createElement("script");
@@ -85,6 +91,20 @@ const SpotifyPlayer: FC<SpotifyPlayerProps> = ({
             }
         }
     }, [uri, currentUri]);
+
+    useEffect(() => {
+        if (
+            autoPlay &&
+            playerLoaded &&
+            spotifyEmbedControllerRef.current &&
+            currentUri &&
+            autoPlayRef.current !== currentUri
+        ) {
+            spotifyEmbedControllerRef.current.play();
+            autoPlayRef.current = currentUri;
+            if (onDidAutoPlay) onDidAutoPlay();
+        }
+    }, [autoPlay, playerLoaded, currentUri, onDidAutoPlay]);
 
     const handlePlayStop = () => {
         if (!spotifyEmbedControllerRef.current) return;

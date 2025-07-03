@@ -41,6 +41,7 @@ const App: FC = () => {
     const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 1023 });
 
     const [spotifyPlayerUri, setSpotifyPlayerUri] = useState<string | null>(null);
+    const [spotifyPlayerAutoPlay, setSpotifyPlayerAutoPlay] = useState(false);
 
     useEffect(() => {
         fetch(`${API_BASE}/api/genres`)
@@ -290,7 +291,10 @@ const App: FC = () => {
                                     <li key={song.uri} className={styles.songItem}>
                                         <GenericIcon
                                             icon="play"
-                                            onClick={() => setSpotifyPlayerUri(song.uri)}
+                                            onClick={() => {
+                                                setSpotifyPlayerUri(song.uri);
+                                                setSpotifyPlayerAutoPlay(true);
+                                            }}
                                             className={styles.feedbackBtn}
                                             width={28}
                                             height={28}
@@ -356,7 +360,10 @@ const App: FC = () => {
                                     <li key={song.uri} className={styles.songItem}>
                                         <GenericIcon
                                             icon="play"
-                                            onClick={() => setSpotifyPlayerUri(song.uri)}
+                                            onClick={() => {
+                                                setSpotifyPlayerUri(song.uri);
+                                                setSpotifyPlayerAutoPlay(true);
+                                            }}
                                             className={styles.feedbackBtn}
                                             width={28}
                                             height={28}
@@ -454,6 +461,8 @@ const App: FC = () => {
                     <div className={styles.spotifyPlayerSidePanel}>
                         <SpotifyPlayer
                             uri={spotifyPlayerUri}
+                            autoPlay={spotifyPlayerAutoPlay}
+                            onDidAutoPlay={() => setSpotifyPlayerAutoPlay(false)}
                             onClose={() => setSpotifyPlayerUri(null)}
                             isLiked={
                                 step === "samples"
