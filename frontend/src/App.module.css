@@ -12,6 +12,7 @@ body {
   --green: #00e676;
   --red: #ff1744;
   --scale: 1.18;
+  --icon-scale: 1.1;
   --border-radius: 18px;
   --shadow: 0 4px 24px rgba(0,0,0,0.10);
 }
@@ -444,7 +445,7 @@ box-shadow: 0 0 0 2px var(--primary);
 
 .footerIcon:hover {
   color: var(--primary);
-  transform: scale(1.1);
+  transform: scale(var(--icon-scale));
 }
 
 .modalOverlay {

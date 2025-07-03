@@ -15,23 +15,6 @@
 }
 
 .closeButton {
-  position: absolute;
-  top: 14px;
-  right: 18px;
-  background: rgba(30,30,30,0.7);
-  border: none;
-  color: #fff;
-  font-size: 1.7rem;
-  font-weight: bold;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  cursor: pointer;
-  z-index: 2;
-  transition: background 0.2s;
-}
-.closeButton:hover {
-  background: #1db954;
   color: #fff;
 }
 

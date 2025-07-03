@@ -294,7 +294,7 @@ const App: FC = () => {
                                             className={styles.feedbackBtn}
                                             width={28}
                                             height={28}
-                                            onHoverStyle={{ transform: "scale(1.1)" }}
+                                            onHoverStyle={{ transform: "scale(var(--icon-scale))" }}
                                         />
                                         <div className={styles.songInfo}>
                                             <div className={styles.songTitle}>{song.name}</div>
@@ -360,7 +360,7 @@ const App: FC = () => {
                                             className={styles.feedbackBtn}
                                             width={28}
                                             height={28}
-                                            onHoverStyle={{ transform: "scale(1.1)" }}
+                                            onHoverStyle={{ transform: "scale(var(--icon-scale))" }}
                                         />
                                         <div className={styles.songInfo}>
                                             <div className={styles.songTitle}>{song.name}</div>
@@ -454,6 +454,7 @@ const App: FC = () => {
                     <div className={styles.spotifyPlayerSidePanel}>
                         <SpotifyPlayer
                             uri={spotifyPlayerUri}
+                            onClose={() => setSpotifyPlayerUri(null)}
                         />
                     </div>
                 )}
@@ -476,28 +477,16 @@ const App: FC = () => {
                             icon="info"
                             onClick={() => setShowModal(true)}
                             className={styles.footerIcon}
-                            onHoverStyle={{
-                                transform: "scale(1.1)",
-                                color: "var(--primary)"
-                            }}
                         />
                         <GenericIcon
                             icon="github"
                             onClick={() => window.open("https://github.com/Joumanasalahedin/nunvibe", "_blank")}
                             className={styles.footerIcon}
-                            onHoverStyle={{
-                                transform: "scale(1.1)",
-                                color: "var(--primary)"
-                            }}
                         />
                         <GenericIcon
                             icon="email"
                             onClick={() => window.open("mailto:somtochukwu.mbuko@stud.th-deg.de", "_blank")}
                             className={styles.footerIcon}
-                            onHoverStyle={{
-                                transform: "scale(1.1)",
-                                color: "var(--primary)"
-                            }}
                         />
                     </div>
                 </div>
