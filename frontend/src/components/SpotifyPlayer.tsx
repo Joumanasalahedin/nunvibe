@@ -46,7 +46,14 @@ const SpotifyPlayer: FC<SpotifyPlayerProps> = ({ uri }) => {
                     setPlayerLoaded(true);
                 });
                 spotifyEmbedController.addListener("playback_update", (e: any) => {
-                    setIsPlaying(!e.data.isPaused);
+                    const { isPaused, position, duration } = e.data;
+                    if (isPaused) {
+                        setIsPlaying(false);
+                    } else if (typeof position === 'number' && typeof duration === 'number' && duration > 0 && position >= duration - 500) {
+                        setIsPlaying(false);
+                    } else {
+                        setIsPlaying(true);
+                    }
                 });
                 spotifyEmbedControllerRef.current = spotifyEmbedController;
             }
@@ -93,4 +100,4 @@ const SpotifyPlayer: FC<SpotifyPlayerProps> = ({ uri }) => {
     );
 };
 
-export default SpotifyPlayer; 
+export default SpotifyPlayer;
