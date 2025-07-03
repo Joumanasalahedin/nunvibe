@@ -1,17 +1,18 @@
 import { FC, useRef, useState, useEffect } from "react";
+import styles from "./SpotifyPlayer.module.css";
 
 interface SpotifyPlayerProps {
     uri: string;
     onClose?: () => void;
 }
 
-const SpotifyPlayer: FC<SpotifyPlayerProps> = ({ uri, onClose }) => {
+const SpotifyPlayer: FC<SpotifyPlayerProps> = ({ uri }) => {
     const embedRef = useRef<HTMLDivElement>(null);
     const spotifyEmbedControllerRef = useRef<any>(null);
     const [iFrameAPI, setIFrameAPI] = useState<any>(undefined);
     const [playerLoaded, setPlayerLoaded] = useState(false);
     const [currentUri, setCurrentUri] = useState(uri);
-
+    const [isPlaying, setIsPlaying] = useState(false);
 
     useEffect(() => {
         const script = document.createElement("script");
@@ -44,6 +45,9 @@ const SpotifyPlayer: FC<SpotifyPlayerProps> = ({ uri, onClose }) => {
                 spotifyEmbedController.addListener("ready", () => {
                     setPlayerLoaded(true);
                 });
+                spotifyEmbedController.addListener("playback_update", (e: any) => {
+                    setIsPlaying(!e.data.isPaused);
+                });
                 spotifyEmbedControllerRef.current = spotifyEmbedController;
             }
         );
@@ -63,28 +67,27 @@ const SpotifyPlayer: FC<SpotifyPlayerProps> = ({ uri, onClose }) => {
         }
     }, [uri, currentUri]);
 
-    const onPauseClick = () => {
-        if (spotifyEmbedControllerRef.current) {
+    const handlePlayStop = () => {
+        if (!spotifyEmbedControllerRef.current) return;
+        if (isPlaying) {
             spotifyEmbedControllerRef.current.pause();
-        }
-    };
-
-    const onPlayClick = () => {
-        if (spotifyEmbedControllerRef.current) {
+        } else {
             spotifyEmbedControllerRef.current.play();
         }
     };
 
     return (
-        <div style={{ width: "100%", background: "#181818", borderRadius: 8, boxShadow: "0 2px 8px rgba(0,0,0,0.2)", padding: 8, position: "relative" }}>
-            {onClose && (
-                <button onClick={onClose} style={{ position: "absolute", top: 8, right: 8, background: "none", border: "none", color: "#fff", fontSize: 20, cursor: "pointer" }}>&times;</button>
-            )}
-            <div ref={embedRef} />
-            {!playerLoaded && <p style={{ color: "#fff", textAlign: "center" }}>Loading Spotify Player...</p>}
-            <div style={{ display: "flex", justifyContent: "center", gap: 12, marginTop: 8 }}>
-                <button aria-label="Play" onClick={onPlayClick} style={{ padding: 6, borderRadius: 4, border: "none", background: "#1db954", color: "#fff", fontWeight: 600, cursor: "pointer" }}>Play</button>
-                <button aria-label="Pause" onClick={onPauseClick} style={{ padding: 6, borderRadius: 4, border: "none", background: "#333", color: "#fff", fontWeight: 600, cursor: "pointer" }}>Pause</button>
+        <div className={styles.container}>
+            <div ref={embedRef} className={styles.embed} />
+            {!playerLoaded && <p className={styles.loading}>Loading Spotify Player...</p>}
+            <div className={styles.controls}>
+                <button
+                    aria-label={isPlaying ? "Stop" : "Play"}
+                    onClick={handlePlayStop}
+                    className={isPlaying ? styles.pauseButton : styles.playButton}
+                >
+                    {isPlaying ? "Stop" : "Play"}
+                </button>
             </div>
         </div>
     );
