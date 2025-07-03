@@ -207,13 +207,25 @@ const App: FC = () => {
                         <h2>Pick 1-3 genres you like</h2>
                         <div className={styles.headerControls}>
                             {songCountSlider}
-                            <input
-                                className={styles.searchBar}
-                                type="text"
-                                placeholder="Search genres..."
-                                value={search}
-                                onChange={e => setSearch(e.target.value)}
-                            />
+                            <div className={styles.searchContainer}>
+                                <input
+                                    className={styles.searchBar}
+                                    type="text"
+                                    placeholder="Search genres..."
+                                    value={search}
+                                    onChange={e => setSearch(e.target.value)}
+                                />
+                                {search && (
+                                    <button
+                                        className={styles.clearButton}
+                                        onClick={() => setSearch("")}
+                                        type="button"
+                                        aria-label="Clear search"
+                                    >
+                                        &times;
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     </div>
                     <div className={styles.genreContainer}>
