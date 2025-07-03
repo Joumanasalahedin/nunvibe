@@ -21,6 +21,7 @@ const App: FC = () => {
     const [genres, setGenres] = useState<Genre[]>([]);
     const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
     const [search, setSearch] = useState("");
+    const [songCount, setSongCount] = useState<number>(10);
 
     const [sampleSongs, setSampleSongs] = useState<Song[]>([]);
     const [likedSamples, setLikedSamples] = useState<string[]>([]);
@@ -58,13 +59,20 @@ const App: FC = () => {
         );
     };
 
+    const handleSongCountChange = (value: number) => {
+        const clampedValue = Math.max(5, Math.min(20, value));
+        setSongCount(clampedValue);
+    };
+
+    // TODO @Joumana: verify all API endpoints payloads
+
     const fetchSamples = async () => {
         setLoading(true);
         setError(null);
         try {
             const params = new URLSearchParams();
             selectedGenres.forEach(g => params.append("genres", g));
-            params.append("limit", "10");
+            params.append("limit", songCount.toString());
             const res = await fetch(`${API_BASE}/api/genres/samples?${params.toString()}`);
             const data = await res.json();
             setSampleSongs(data.samples || []);
@@ -79,19 +87,15 @@ const App: FC = () => {
     const handleSampleFeedback = (id: string, liked: boolean) => {
         if (liked) {
             if (likedSamples.includes(id)) {
-                // Deselect if already liked
                 setLikedSamples(prev => prev.filter(sid => sid !== id));
             } else {
-                // Select like and remove from disliked
                 setLikedSamples(prev => [...prev, id]);
                 setDislikedSamples(prev => prev.filter(sid => sid !== id));
             }
         } else {
             if (dislikedSamples.includes(id)) {
-                // Deselect if already disliked
                 setDislikedSamples(prev => prev.filter(sid => sid !== id));
             } else {
-                // Select dislike and remove from liked
                 setDislikedSamples(prev => [...prev, id]);
                 setLikedSamples(prev => prev.filter(sid => sid !== id));
             }
@@ -108,6 +112,8 @@ const App: FC = () => {
                 body: JSON.stringify({
                     seed_genres: selectedGenres,
                     seed_uris: likedSamples,
+                    disliked_uris: dislikedSamples,
+                    k: songCount
                 }),
             });
             const data = await res.json();
@@ -123,19 +129,15 @@ const App: FC = () => {
     const handleRecFeedback = (id: string, liked: boolean) => {
         if (liked) {
             if (likedRecs.includes(id)) {
-                // Deselect if already liked
                 setLikedRecs(prev => prev.filter(sid => sid !== id));
             } else {
-                // Select like and remove from disliked
                 setLikedRecs(prev => [...prev, id]);
                 setDislikedRecs(prev => prev.filter(sid => sid !== id));
             }
         } else {
             if (dislikedRecs.includes(id)) {
-                // Deselect if already disliked
                 setDislikedRecs(prev => prev.filter(sid => sid !== id));
             } else {
-                // Select dislike and remove from liked
                 setDislikedRecs(prev => [...prev, id]);
                 setLikedRecs(prev => prev.filter(sid => sid !== id));
             }
@@ -154,6 +156,7 @@ const App: FC = () => {
                     seed_uris: likedSamples,
                     liked_uris: likedRecs,
                     disliked_uris: dislikedRecs,
+                    k: songCount
                 }),
             });
             const data = await res.json();
@@ -172,6 +175,24 @@ const App: FC = () => {
         g.name.toLowerCase().includes(search.toLowerCase())
     );
 
+    const songCountSlider = (
+        <div className={styles.songCountSelector}>
+            <label htmlFor="songCount" className={styles.songCountLabel}>
+                &#8470; of songs: {songCount}
+            </label>
+            <input
+                id="songCount"
+                type="range"
+                min="5"
+                step="1"
+                max="20"
+                value={songCount}
+                onChange={(e) => handleSongCountChange(parseInt(e.target.value))}
+                className={styles.songCountSlider}
+            />
+        </div>
+    )
+
     return (
         <div className={styles.appContainer}>
             <h1>nunvibe™</h1>
@@ -182,13 +203,16 @@ const App: FC = () => {
                 <div>
                     <div className={styles.genreHeader}>
                         <h2>Pick 1-3 genres you like</h2>
-                        <input
-                            className={styles.searchBar}
-                            type="text"
-                            placeholder="Search genres..."
-                            value={search}
-                            onChange={e => setSearch(e.target.value)}
-                        />
+                        <div className={styles.headerControls}>
+                            {songCountSlider}
+                            <input
+                                className={styles.searchBar}
+                                type="text"
+                                placeholder="Search genres..."
+                                value={search}
+                                onChange={e => setSearch(e.target.value)}
+                            />
+                        </div>
                     </div>
                     <div className={styles.genreContainer}>
                         <div className={styles.genreChips}>
@@ -235,7 +259,10 @@ const App: FC = () => {
 
             {step === "samples" && (
                 <div>
-                    <h2>Sample Songs</h2>
+                    <div className={styles.stepHeader}>
+                        <h2>Sample Songs</h2>
+                        {songCountSlider}
+                    </div>
                     <p className={styles.description}>
                         Like or dislike songs to help us recommend better music for you!
                     </p>
@@ -290,7 +317,10 @@ const App: FC = () => {
 
             {step === "recommend" && (
                 <div>
-                    <h2>Recommended Songs</h2>
+                    <div className={styles.stepHeader}>
+                        <h2>Recommended Songs</h2>
+                        {songCountSlider}
+                    </div>
                     <p className={styles.description}>
                         Like or dislike songs to help us recommend better music for you!
                     </p>
