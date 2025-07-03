@@ -254,7 +254,7 @@ const App: FC = () => {
                             </div>
                             {selectedGenres.length > 0 && (
                                 <div className={styles.selectedGenres}>
-                                    <span className={styles.selectedLabel}>Selected:</span>
+                                    <span className={styles.selectedLabel}>Selected genres:</span>
                                     <div className={styles.selectedGenreList}>
                                         {selectedGenres.map(genreId => {
                                             const genre = genres.find(g => g.id === genreId);
@@ -286,6 +286,21 @@ const App: FC = () => {
                             <p className={styles.description}>
                                 Like or dislike songs to help us recommend better music for you!
                             </p>
+                            {selectedGenres.length > 0 && (
+                                <div className={styles.selectedGenres}>
+                                    <span className={styles.selectedLabel}>Selected genres:</span>
+                                    <div className={styles.selectedGenreList}>
+                                        {selectedGenres.map(genreId => {
+                                            const genre = genres.find(g => g.id === genreId);
+                                            return (
+                                                <span key={genreId} className={styles.selectedGenre}>
+                                                    {genre?.name}
+                                                </span>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            )}
                             <ul className={styles.songList}>
                                 {Array.isArray(sampleSongs) && sampleSongs.length > 0 ? sampleSongs.map(song => (
                                     <li key={song.uri} className={styles.songItem}>
