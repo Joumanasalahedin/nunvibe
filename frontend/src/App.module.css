@@ -21,6 +21,14 @@ body {
   color: var(--accent);
   padding: 2rem;
   font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  display: flex;
+  flex-direction: row;
+  position: relative;
+}
+
+.mainContent {
+  flex: 1;
+  min-width: 0;
 }
 
 h1, h2 {
@@ -287,6 +295,7 @@ box-shadow: 0 0 0 2px var(--primary);
 }
 .songInfo {
   flex: 1;
+  margin-left: 8px;
 }
 .songTitle {
   flex: 1;
@@ -383,6 +392,18 @@ box-shadow: 0 0 0 2px var(--primary);
   margin-right: 6px;
   margin-bottom: 2px;
   filter: brightness(1.2);
+}
+
+.spotifyPlayerSidePanel {
+  width: 380px;
+  min-width: 320px;
+  max-width: 420px;
+  margin-left: 24px;
+  margin-right: 24px;
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  z-index: 100;
 }
 
 .footer {

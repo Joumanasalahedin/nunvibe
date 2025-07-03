@@ -199,308 +199,310 @@ const App: FC = () => {
     )
 
     return (
-        <div className={styles.appContainer} style={{ display: 'flex', flexDirection: 'row', position: 'relative' }}>
-            <div style={{ flex: 1, minWidth: 0 }}>
-                <h1>nunvibe™</h1>
-                {error && <div className={styles.error}>{error}</div>}
-                {loading && <div className={styles.loading}>Loading...</div>}
+        <>
+            <div className={styles.appContainer}>
+                <div className={styles.mainContent}>
+                    <h1>nunvibe™</h1>
+                    {error && <div className={styles.error}>{error}</div>}
+                    {loading && <div className={styles.loading}>Loading...</div>}
 
-                {step === "genre" && (
-                    <div>
-                        <div className={styles.genreHeader}>
-                            <h2>Pick 1-3 genres you like</h2>
-                            <div className={styles.headerControls}>
-                                {songCountSlider}
-                                <div className={styles.searchContainer}>
-                                    <input
-                                        className={styles.searchBar}
-                                        type="text"
-                                        placeholder="Search genres..."
-                                        value={search}
-                                        onChange={e => setSearch(e.target.value)}
-                                    />
-                                    {search && (
+                    {step === "genre" && (
+                        <div>
+                            <div className={styles.genreHeader}>
+                                <h2>Pick 1-3 genres you like</h2>
+                                <div className={styles.headerControls}>
+                                    {songCountSlider}
+                                    <div className={styles.searchContainer}>
+                                        <input
+                                            className={styles.searchBar}
+                                            type="text"
+                                            placeholder="Search genres..."
+                                            value={search}
+                                            onChange={e => setSearch(e.target.value)}
+                                        />
+                                        {search && (
+                                            <button
+                                                className={styles.clearButton}
+                                                onClick={() => setSearch("")}
+                                                type="button"
+                                                aria-label="Clear search"
+                                            >
+                                                &times;
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className={styles.genreContainer}>
+                                <div className={styles.genreChips}>
+                                    {filteredGenres.map(g => (
                                         <button
-                                            className={styles.clearButton}
-                                            onClick={() => setSearch("")}
-                                            type="button"
-                                            aria-label="Clear search"
+                                            key={g.id}
+                                            onClick={() => toggleGenre(g.id)}
+                                            className={
+                                                selectedGenres.includes(g.id)
+                                                    ? `${styles.genreChip} ${styles.selected}`
+                                                    : styles.genreChip
+                                            }
+                                            disabled={loading}
                                         >
-                                            &times;
+                                            {g.name}
                                         </button>
-                                    )}
+                                    ))}
                                 </div>
                             </div>
+                            {selectedGenres.length > 0 && (
+                                <div className={styles.selectedGenres}>
+                                    <span className={styles.selectedLabel}>Selected:</span>
+                                    <div className={styles.selectedGenreList}>
+                                        {selectedGenres.map(genreId => {
+                                            const genre = genres.find(g => g.id === genreId);
+                                            return (
+                                                <span key={genreId} className={styles.selectedGenre}>
+                                                    {genre?.name}
+                                                </span>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            )}
+                            <button
+                                onClick={fetchSamples}
+                                disabled={selectedGenres.length === 0 || selectedGenres.length > 3 || loading}
+                                className={styles.button}
+                            >
+                                Get Sample Songs
+                            </button>
                         </div>
-                        <div className={styles.genreContainer}>
-                            <div className={styles.genreChips}>
-                                {filteredGenres.map(g => (
-                                    <button
-                                        key={g.id}
-                                        onClick={() => toggleGenre(g.id)}
-                                        className={
-                                            selectedGenres.includes(g.id)
-                                                ? `${styles.genreChip} ${styles.selected}`
-                                                : styles.genreChip
-                                        }
-                                        disabled={loading}
-                                    >
-                                        {g.name}
-                                    </button>
+                    )}
+
+                    {step === "samples" && (
+                        <div>
+                            <div className={styles.stepHeader}>
+                                <h2>Sample Songs</h2>
+                                {songCountSlider}
+                            </div>
+                            <p className={styles.description}>
+                                Like or dislike songs to help us recommend better music for you!
+                            </p>
+                            <ul className={styles.songList}>
+                                {Array.isArray(sampleSongs) && sampleSongs.length > 0 ? sampleSongs.map(song => (
+                                    <li key={song.uri} className={styles.songItem}>
+                                        <GenericIcon
+                                            icon="play"
+                                            onClick={() => setSpotifyPlayerUri(song.uri)}
+                                            className={styles.feedbackBtn}
+                                            width={28}
+                                            height={28}
+                                            onHoverStyle={{ transform: "scale(1.1)" }}
+                                        />
+                                        <div className={styles.songInfo}>
+                                            <div className={styles.songTitle}>{song.name}</div>
+                                            <div className={styles.songArtist}>
+                                                <img src="/artist-icon.png" alt="artist" className={styles.artistIcon} />
+                                                {song.artist}
+                                            </div>
+                                        </div>
+                                        <GenericIcon
+                                            icon="like"
+                                            onClick={() => handleSampleFeedback(song.uri, true)}
+                                            className={
+                                                likedSamples.includes(song.uri)
+                                                    ? `${styles.feedbackBtn} ${styles.liked}`
+                                                    : styles.feedbackBtn
+                                            }
+                                            onHoverStyle={{
+                                                transform: "scale(var(--scale))"
+                                            }}
+                                        />
+                                        <GenericIcon
+                                            icon="dislike"
+                                            onClick={() => handleSampleFeedback(song.uri, false)}
+                                            className={
+                                                dislikedSamples.includes(song.uri)
+                                                    ? `${styles.feedbackBtn} ${styles.disliked}`
+                                                    : styles.feedbackBtn
+                                            }
+                                            onHoverStyle={{
+                                                transform: "scale(var(--scale))"
+                                            }}
+                                        />
+                                    </li>
+                                )) : (
+                                    <li className={styles.noSamples}>No samples found.</li>
+                                )}
+                            </ul>
+                            <button
+                                onClick={fetchRecommendations}
+                                disabled={likedSamples.length + dislikedSamples.length === 0 || loading}
+                                className={styles.button}
+                            >
+                                Get Recommendations
+                            </button>
+                        </div>
+                    )}
+
+                    {step === "recommend" && (
+                        <div>
+                            <div className={styles.stepHeader}>
+                                <h2>Recommended Songs</h2>
+                                {songCountSlider}
+                            </div>
+                            <p className={styles.description}>
+                                Like or dislike songs to help us recommend better music for you!
+                            </p>
+                            <ul className={styles.songList}>
+                                {recommendations.map(song => (
+                                    <li key={song.uri} className={styles.songItem}>
+                                        <GenericIcon
+                                            icon="play"
+                                            onClick={() => setSpotifyPlayerUri(song.uri)}
+                                            className={styles.feedbackBtn}
+                                            width={28}
+                                            height={28}
+                                            onHoverStyle={{ transform: "scale(1.1)" }}
+                                        />
+                                        <div className={styles.songInfo}>
+                                            <div className={styles.songTitle}>{song.name}</div>
+                                            <div className={styles.songArtist}>
+                                                <img src="/artist-icon.png" alt="artist" className={styles.artistIcon} />
+                                                {song.artist}
+                                            </div>
+                                        </div>
+                                        <GenericIcon
+                                            icon="like"
+                                            onClick={() => handleRecFeedback(song.uri, true)}
+                                            className={
+                                                likedRecs.includes(song.uri)
+                                                    ? `${styles.feedbackBtn} ${styles.liked}`
+                                                    : styles.feedbackBtn
+                                            }
+                                            onHoverStyle={{
+                                                transform: "scale(var(--scale))"
+                                            }}
+                                        />
+                                        <GenericIcon
+                                            icon="dislike"
+                                            onClick={() => handleRecFeedback(song.uri, false)}
+                                            className={
+                                                dislikedRecs.includes(song.uri)
+                                                    ? `${styles.feedbackBtn} ${styles.disliked}`
+                                                    : styles.feedbackBtn
+                                            }
+                                            onHoverStyle={{
+                                                transform: "scale(var(--scale))"
+                                            }}
+                                        />
+                                    </li>
                                 ))}
-                            </div>
+                            </ul>
+                            <button
+                                onClick={fetchMoreRecommendations}
+                                disabled={likedRecs.length + dislikedRecs.length === 0 || loading}
+                                className={styles.button}
+                            >
+                                Recommend More
+                            </button>
                         </div>
-                        {selectedGenres.length > 0 && (
-                            <div className={styles.selectedGenres}>
-                                <span className={styles.selectedLabel}>Selected:</span>
-                                <div className={styles.selectedGenreList}>
-                                    {selectedGenres.map(genreId => {
-                                        const genre = genres.find(g => g.id === genreId);
-                                        return (
-                                            <span key={genreId} className={styles.selectedGenre}>
-                                                {genre?.name}
-                                            </span>
-                                        );
-                                    })}
+                    )}
+
+                    {showModal && (
+                        <div className={styles.modalOverlay} onClick={() => setShowModal(false)}>
+                            <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+                                <div className={styles.modalHeader}>
+                                    <h3>About nunvibe™</h3>
+                                    <button
+                                        className={styles.modalClose}
+                                        onClick={() => setShowModal(false)}
+                                    >
+                                        &times;
+                                    </button>
                                 </div>
-                            </div>
-                        )}
-                        <button
-                            onClick={fetchSamples}
-                            disabled={selectedGenres.length === 0 || selectedGenres.length > 3 || loading}
-                            className={styles.button}
-                        >
-                            Get Sample Songs
-                        </button>
-                    </div>
-                )}
-
-                {step === "samples" && (
-                    <div>
-                        <div className={styles.stepHeader}>
-                            <h2>Sample Songs</h2>
-                            {songCountSlider}
-                        </div>
-                        <p className={styles.description}>
-                            Like or dislike songs to help us recommend better music for you!
-                        </p>
-                        <ul className={styles.songList}>
-                            {Array.isArray(sampleSongs) && sampleSongs.length > 0 ? sampleSongs.map(song => (
-                                <li key={song.uri} className={styles.songItem} style={{ display: 'flex', alignItems: 'center' }}>
-                                    <GenericIcon
-                                        icon="play"
-                                        onClick={() => setSpotifyPlayerUri(song.uri)}
-                                        className={styles.feedbackBtn}
-                                        width={28}
-                                        height={28}
-                                        onHoverStyle={{ transform: "scale(1.1)" }}
-                                    />
-                                    <div className={styles.songInfo} style={{ marginLeft: 8 }}>
-                                        <div className={styles.songTitle}>{song.name}</div>
-                                        <div className={styles.songArtist}>
-                                            <img src="/artist-icon.png" alt="artist" className={styles.artistIcon} />
-                                            {song.artist}
-                                        </div>
+                                <div className={styles.modalContent}>
+                                    <p>
+                                        nunvibe™ is an intelligent music recommendation system that learns your taste
+                                        through genre selection and song feedback to provide personalized music suggestions.
+                                    </p>
+                                    <p>
+                                        Our AI-powered algorithm analyzes your preferences to discover new songs
+                                        that match your unique musical taste.
+                                    </p>
+                                    <div className={styles.modalLinks}>
+                                        <a
+                                            href="https://github.com/Joumanasalahedin/nunvibe"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className={styles.modalLink}
+                                        >
+                                            <GenericIcon icon="github" className={styles.modalLinkIcon} />
+                                            View on GitHub
+                                        </a>
+                                        <a
+                                            href="mailto:somtochukwu.mbuko@stud.th-deg.de"
+                                            className={styles.modalLink}
+                                        >
+                                            <GenericIcon icon="email" className={styles.modalLinkIcon} />
+                                            Contact Us
+                                        </a>
                                     </div>
-                                    <GenericIcon
-                                        icon="like"
-                                        onClick={() => handleSampleFeedback(song.uri, true)}
-                                        className={
-                                            likedSamples.includes(song.uri)
-                                                ? `${styles.feedbackBtn} ${styles.liked}`
-                                                : styles.feedbackBtn
-                                        }
-                                        onHoverStyle={{
-                                            transform: "scale(var(--scale))"
-                                        }}
-                                    />
-                                    <GenericIcon
-                                        icon="dislike"
-                                        onClick={() => handleSampleFeedback(song.uri, false)}
-                                        className={
-                                            dislikedSamples.includes(song.uri)
-                                                ? `${styles.feedbackBtn} ${styles.disliked}`
-                                                : styles.feedbackBtn
-                                        }
-                                        onHoverStyle={{
-                                            transform: "scale(var(--scale))"
-                                        }}
-                                    />
-                                </li>
-                            )) : (
-                                <li className={styles.noSamples}>No samples found.</li>
-                            )}
-                        </ul>
-                        <button
-                            onClick={fetchRecommendations}
-                            disabled={likedSamples.length + dislikedSamples.length === 0 || loading}
-                            className={styles.button}
-                        >
-                            Get Recommendations
-                        </button>
-                    </div>
-                )}
-
-                {step === "recommend" && (
-                    <div>
-                        <div className={styles.stepHeader}>
-                            <h2>Recommended Songs</h2>
-                            {songCountSlider}
-                        </div>
-                        <p className={styles.description}>
-                            Like or dislike songs to help us recommend better music for you!
-                        </p>
-                        <ul className={styles.songList}>
-                            {recommendations.map(song => (
-                                <li key={song.uri} className={styles.songItem} style={{ display: 'flex', alignItems: 'center' }}>
-                                    <GenericIcon
-                                        icon="play"
-                                        onClick={() => setSpotifyPlayerUri(song.uri)}
-                                        className={styles.feedbackBtn}
-                                        width={28}
-                                        height={28}
-                                        onHoverStyle={{ transform: "scale(1.1)" }}
-                                    />
-                                    <div className={styles.songInfo} style={{ marginLeft: 8 }}>
-                                        <div className={styles.songTitle}>{song.name}</div>
-                                        <div className={styles.songArtist}>
-                                            <img src="/artist-icon.png" alt="artist" className={styles.artistIcon} />
-                                            {song.artist}
-                                        </div>
-                                    </div>
-                                    <GenericIcon
-                                        icon="like"
-                                        onClick={() => handleRecFeedback(song.uri, true)}
-                                        className={
-                                            likedRecs.includes(song.uri)
-                                                ? `${styles.feedbackBtn} ${styles.liked}`
-                                                : styles.feedbackBtn
-                                        }
-                                        onHoverStyle={{
-                                            transform: "scale(var(--scale))"
-                                        }}
-                                    />
-                                    <GenericIcon
-                                        icon="dislike"
-                                        onClick={() => handleRecFeedback(song.uri, false)}
-                                        className={
-                                            dislikedRecs.includes(song.uri)
-                                                ? `${styles.feedbackBtn} ${styles.disliked}`
-                                                : styles.feedbackBtn
-                                        }
-                                        onHoverStyle={{
-                                            transform: "scale(var(--scale))"
-                                        }}
-                                    />
-                                </li>
-                            ))}
-                        </ul>
-                        <button
-                            onClick={fetchMoreRecommendations}
-                            disabled={likedRecs.length + dislikedRecs.length === 0 || loading}
-                            className={styles.button}
-                        >
-                            Recommend More
-                        </button>
-                    </div>
-                )}
-
-                <footer className={styles.footer}>
-                    <div className={styles.footerContent}>
-                        <div className={styles.footerText}>
-                            {isTablet || isMobile ? (
-                                <>
-                                    <strong>nunvibe™</strong> Music Recommender &copy; {currentYear} <br /> A project by <strong>Joumana</strong> and <strong>Somto</strong>
-                                </>
-                            ) : (
-                                <>
-                                    <strong>nunvibe™</strong> Music Recommender &copy; {currentYear}, a project by <strong>Joumana</strong> and <strong>Somto</strong>
-                                </>
-                            )}
-                        </div>
-                        <div className={styles.footerIcons}>
-                            <GenericIcon
-                                icon="info"
-                                onClick={() => setShowModal(true)}
-                                className={styles.footerIcon}
-                                onHoverStyle={{
-                                    transform: "scale(1.1)",
-                                    color: "var(--primary)"
-                                }}
-                            />
-                            <GenericIcon
-                                icon="github"
-                                onClick={() => window.open("https://github.com/Joumanasalahedin/nunvibe", "_blank")}
-                                className={styles.footerIcon}
-                                onHoverStyle={{
-                                    transform: "scale(1.1)",
-                                    color: "var(--primary)"
-                                }}
-                            />
-                            <GenericIcon
-                                icon="email"
-                                onClick={() => window.open("mailto:somtochukwu.mbuko@stud.th-deg.de", "_blank")}
-                                className={styles.footerIcon}
-                                onHoverStyle={{
-                                    transform: "scale(1.1)",
-                                    color: "var(--primary)"
-                                }}
-                            />
-                        </div>
-                    </div>
-                </footer>
-
-                {showModal && (
-                    <div className={styles.modalOverlay} onClick={() => setShowModal(false)}>
-                        <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-                            <div className={styles.modalHeader}>
-                                <h3>About nunvibe™</h3>
-                                <button
-                                    className={styles.modalClose}
-                                    onClick={() => setShowModal(false)}
-                                >
-                                    &times;
-                                </button>
-                            </div>
-                            <div className={styles.modalContent}>
-                                <p>
-                                    nunvibe™ is an intelligent music recommendation system that learns your taste
-                                    through genre selection and song feedback to provide personalized music suggestions.
-                                </p>
-                                <p>
-                                    Our AI-powered algorithm analyzes your preferences to discover new songs
-                                    that match your unique musical taste.
-                                </p>
-                                <div className={styles.modalLinks}>
-                                    <a
-                                        href="https://github.com/Joumanasalahedin/nunvibe"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className={styles.modalLink}
-                                    >
-                                        <GenericIcon icon="github" className={styles.modalLinkIcon} />
-                                        View on GitHub
-                                    </a>
-                                    <a
-                                        href="mailto:somtochukwu.mbuko@stud.th-deg.de"
-                                        className={styles.modalLink}
-                                    >
-                                        <GenericIcon icon="email" className={styles.modalLinkIcon} />
-                                        Contact Us
-                                    </a>
                                 </div>
                             </div>
                         </div>
+                    )}
+                </div>
+                {spotifyPlayerUri && (
+                    <div className={styles.spotifyPlayerSidePanel}>
+                        <SpotifyPlayer
+                            uri={spotifyPlayerUri}
+                        />
                     </div>
                 )}
             </div>
-            {/* Spotify Player Side Panel */}
-            {spotifyPlayerUri && (
-                <div style={{ width: 380, minWidth: 320, maxWidth: 420, marginLeft: 24, position: 'sticky', top: 0, alignSelf: 'flex-start', zIndex: 100 }}>
-                    <SpotifyPlayer uri={spotifyPlayerUri} onClose={() => setSpotifyPlayerUri(null)} />
+            <footer className={styles.footer}>
+                <div className={styles.footerContent}>
+                    <div className={styles.footerText}>
+                        {isTablet || isMobile ? (
+                            <>
+                                <strong>nunvibe™</strong> Music Recommender &copy; {currentYear} <br /> A project by <strong>Joumana</strong> and <strong>Somto</strong>
+                            </>
+                        ) : (
+                            <>
+                                <strong>nunvibe™</strong> Music Recommender &copy; {currentYear}, a project by <strong>Joumana</strong> and <strong>Somto</strong>
+                            </>
+                        )}
+                    </div>
+                    <div className={styles.footerIcons}>
+                        <GenericIcon
+                            icon="info"
+                            onClick={() => setShowModal(true)}
+                            className={styles.footerIcon}
+                            onHoverStyle={{
+                                transform: "scale(1.1)",
+                                color: "var(--primary)"
+                            }}
+                        />
+                        <GenericIcon
+                            icon="github"
+                            onClick={() => window.open("https://github.com/Joumanasalahedin/nunvibe", "_blank")}
+                            className={styles.footerIcon}
+                            onHoverStyle={{
+                                transform: "scale(1.1)",
+                                color: "var(--primary)"
+                            }}
+                        />
+                        <GenericIcon
+                            icon="email"
+                            onClick={() => window.open("mailto:somtochukwu.mbuko@stud.th-deg.de", "_blank")}
+                            className={styles.footerIcon}
+                            onHoverStyle={{
+                                transform: "scale(1.1)",
+                                color: "var(--primary)"
+                            }}
+                        />
+                    </div>
                 </div>
-            )}
-        </div>
+            </footer>
+        </>
     );
 };
 
