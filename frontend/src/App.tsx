@@ -203,7 +203,12 @@ const App: FC = () => {
         <>
             <div className={styles.appContainer}>
                 <div className={styles.mainContent}>
-                    <h1>nunvibe™</h1>
+                    <h1>
+                        <a href="/" className={styles.brandName}>
+                            <img src="/favicon.png" alt="nunvibe logo" className={styles.brandIcon} />
+                            <span className={styles.brandName}>nunvibe&trade;</span>
+                        </a>
+                    </h1>
                     {error && <div className={styles.error}>{error}</div>}
                     {loading && <div className={styles.loading}>Loading...</div>}
 
