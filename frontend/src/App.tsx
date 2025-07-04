@@ -110,8 +110,6 @@ const App: FC = () => {
         liked: boolean
     ) => handleUserLikeDislikeAction(id, liked, 'recommendation');
 
-    // TODO @Joumana: verify all API endpoints payloads
-
     const fetchSamples = async () => {
         setLoading(true);
         setError(null);
@@ -183,7 +181,11 @@ const App: FC = () => {
 
     const songCountSlider = (
         <div className={styles.songCountSelector}>
-            <label htmlFor="songCount" className={styles.songCountLabel}>
+            <label
+                htmlFor="songCount"
+                className={styles.songCountLabel}
+                title="Number of songs that will be returned if available."
+            >
                 &#8470; of songs: {songCount}
             </label>
             <input
