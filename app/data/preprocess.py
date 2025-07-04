@@ -60,17 +60,97 @@ class ContentData:
         else:
             zero_pad = np.zeros(len(self.numeric_cols))
             user_vec = np.hstack([g_vec, zero_pad])[None, :]
+
+        # Start with a larger search to ensure we get enough unique results
+        # Search 3x more to account for duplicates and exclusions
+        search_k = min(k * 3, len(self.track_uris))
         dists, nbrs = self.knn.kneighbors(
-            user_vec, n_neighbors=k + len(seed_uris))
+            user_vec, n_neighbors=search_k)
+
         recs = []
+        seen_uris = set()
+        seen_songs = set()  # Track unique song+artist combinations
+
         for idx in nbrs[0]:
             uri = self.track_uris[idx]
-            if uri not in seed_uris:
+            if uri not in seed_uris and uri not in seen_uris:
+                song_name = self.track_names[idx]
+                artist_name = self.artist_names[idx]
+
+                # Create a unique key for song+artist combination
+                song_key = f"{song_name}|{artist_name}"
+
+                if song_key in seen_songs:
+                    continue
+                seen_songs.add(song_key)
+
                 recs.append(
-                    {"uri": uri, "name": self.track_names[idx], "artist": self.artist_names[idx]})
+                    {"uri": uri, "name": song_name, "artist": artist_name})
+                seen_uris.add(uri)
                 if len(recs) >= k:
                     break
+
+        # If we still don't have enough recommendations, expand search to all tracks
+        if len(recs) < k:
+            # Get all track indices and sort by popularity or other criteria
+            all_indices = list(range(len(self.track_uris)))
+
+            # Sort by popularity (assuming popularity is in the first numeric column)
+            popularity_scores = self.features[:, len(
+                self.genre_encoder.classes_)]  # Popularity column
+            sorted_indices = sorted(
+                all_indices, key=lambda i: popularity_scores[i], reverse=True)
+
+            for idx in sorted_indices:
+                uri = self.track_uris[idx]
+                if uri not in seed_uris and uri not in seen_uris:
+                    song_name = self.track_names[idx]
+                    artist_name = self.artist_names[idx]
+
+                    song_key = f"{song_name}|{artist_name}"
+
+                    if song_key in seen_songs:
+                        continue
+                    seen_songs.add(song_key)
+
+                    recs.append(
+                        {"uri": uri, "name": song_name, "artist": artist_name})
+                    seen_uris.add(uri)
+                    if len(recs) >= k:
+                        break
+
         return recs
+
+    def get_track_info(self, uris: list[str]) -> list[dict]:
+        """Return track information for the given URIs, removing duplicates by song name and artist."""
+        seen_uris = set()
+        seen_songs = set()  # Track unique song+artist combinations
+        result = []
+
+        for uri in uris:
+            if uri in seen_uris:
+                continue
+            seen_uris.add(uri)
+
+            if uri in self.track_uris:
+                idx = self.track_uris.index(uri)
+                song_name = self.track_names[idx]
+                artist_name = self.artist_names[idx]
+
+                # Create a unique key for song+artist combination
+                song_key = f"{song_name}|{artist_name}"
+
+                if song_key in seen_songs:
+                    continue
+                seen_songs.add(song_key)
+
+                result.append({
+                    "uri": uri,
+                    "name": song_name,
+                    "artist": artist_name
+                })
+
+        return result
 
 
 def load_feature_matrix(uris: list[str]) -> np.ndarray:
