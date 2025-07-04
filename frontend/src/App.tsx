@@ -307,8 +307,8 @@ const App: FC = () => {
                                 </div>
                             )}
                             <ul className={styles.songList}>
-                                {Array.isArray(sampleSongs) && sampleSongs.length > 0 ? sampleSongs.map(song => (
-                                    <li key={song.uri} className={styles.songItem}>
+                                {Array.isArray(sampleSongs) && sampleSongs.length > 0 ? sampleSongs.map((song, idx) => (
+                                    <li key={song.uri + '-' + idx} className={styles.songItem}>
                                         <GenericIcon
                                             icon="play"
                                             onClick={() => {
@@ -376,8 +376,8 @@ const App: FC = () => {
                                 Like or dislike songs to help us recommend better music for you!
                             </p>
                             <ul className={styles.songList}>
-                                {recommendations.map(song => (
-                                    <li key={song.uri} className={styles.songItem}>
+                                {recommendations.map((song, idx) => (
+                                    <li key={song.uri + '-' + idx} className={styles.songItem}>
                                         <GenericIcon
                                             icon="play"
                                             onClick={() => {
