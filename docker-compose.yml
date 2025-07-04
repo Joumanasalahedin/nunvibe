@@ -9,3 +9,17 @@ services:
     volumes:
       - ./:/app
     restart: unless-stopped
+
+  nunvibe-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: nunvibe-frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - nunvibe-backend
+    restart: unless-stopped
