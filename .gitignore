@@ -8,4 +8,5 @@ models/
 .DS_Store
 .vscode/
 .idea/
-data/feedback.csv
+app/data/feedback.csv
+/data/feedback.csv

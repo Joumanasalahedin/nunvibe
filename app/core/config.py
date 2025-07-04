@@ -7,6 +7,6 @@ DEFAULT_K = 10
 MODEL_PATH = "models/knn_model.joblib"
 
 # Paths for feedback-driven logistic regression
-FEEDBACK_CSV_PATH = "data/feedback.csv"
+FEEDBACK_CSV_PATH = "app/data/feedback.csv"
 LR_MODEL_PATH = "models/logistic_regression.joblib"
 MIN_FEEDBACK = 10
