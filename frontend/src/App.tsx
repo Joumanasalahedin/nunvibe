@@ -318,7 +318,10 @@ const App: FC = () => {
                                             className={styles.feedbackBtn}
                                             width={28}
                                             height={28}
-                                            onHoverStyle={{ transform: "scale(var(--icon-scale))" }}
+                                            onHoverStyle={{
+                                                transform: "scale(var(--icon-scale))"
+                                            }}
+                                            title="Play"
                                         />
                                         <div className={styles.songInfo}>
                                             <div className={styles.songTitle}>{song.name}</div>
@@ -338,6 +341,7 @@ const App: FC = () => {
                                             onHoverStyle={{
                                                 transform: "scale(var(--scale))"
                                             }}
+                                            title="Like"
                                         />
                                         <GenericIcon
                                             icon="dislike"
@@ -350,6 +354,7 @@ const App: FC = () => {
                                             onHoverStyle={{
                                                 transform: "scale(var(--scale))"
                                             }}
+                                            title="Dislike"
                                         />
                                     </li>
                                 )) : (
@@ -387,7 +392,10 @@ const App: FC = () => {
                                             className={styles.feedbackBtn}
                                             width={28}
                                             height={28}
-                                            onHoverStyle={{ transform: "scale(var(--icon-scale))" }}
+                                            onHoverStyle={{
+                                                transform: "scale(var(--icon-scale))"
+                                            }}
+                                            title="Play"
                                         />
                                         <div className={styles.songInfo}>
                                             <div className={styles.songTitle}>{song.name}</div>
@@ -407,6 +415,7 @@ const App: FC = () => {
                                             onHoverStyle={{
                                                 transform: "scale(var(--scale))"
                                             }}
+                                            title="Like"
                                         />
                                         <GenericIcon
                                             icon="dislike"
@@ -419,6 +428,7 @@ const App: FC = () => {
                                             onHoverStyle={{
                                                 transform: "scale(var(--scale))"
                                             }}
+                                            title="Dislike"
                                         />
                                     </li>
                                 ))}
@@ -530,16 +540,19 @@ const App: FC = () => {
                             icon="info"
                             onClick={() => setShowModal(true)}
                             className={styles.footerIcon}
+                            title="About"
                         />
                         <GenericIcon
                             icon="github"
                             onClick={() => window.open("https://github.com/Joumanasalahedin/nunvibe", "_blank")}
                             className={styles.footerIcon}
+                            title="View on GitHub"
                         />
                         <GenericIcon
                             icon="email"
                             onClick={() => window.open("mailto:somtochukwu.mbuko@stud.th-deg.de", "_blank")}
                             className={styles.footerIcon}
+                            title="Email Us"
                         />
                     </div>
                 </div>

@@ -139,12 +139,14 @@ const SpotifyPlayer: FC<SpotifyPlayerProps> = ({
                     onClick={onLike}
                     className={isLiked ? `${styles.feedbackBtn} ${styles.liked}` : styles.feedbackBtn}
                     onHoverStyle={{ transform: "scale(1.1)" }}
+                    title="Like"
                 />
                 <GenericIcon
                     icon="dislike"
                     onClick={onDislike}
                     className={isDisliked ? `${styles.feedbackBtn} ${styles.disliked}` : styles.feedbackBtn}
                     onHoverStyle={{ transform: "scale(1.1)" }}
+                    title="Dislike"
                 />
             </div>
             <div ref={embedRef} className={styles.embed} />
