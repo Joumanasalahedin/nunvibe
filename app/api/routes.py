@@ -29,7 +29,8 @@ def list_genres():
 @router.get("/genres/samples", response_model=GenreSamplesResponse)
 def genre_samples(
     genres: list[str] = Query(..., description="Selected genres"),
-    limit: int = Query(10, gt=0, description="How many sample tracks to return"),
+    limit: int = Query(
+        10, gt=0, description="How many sample tracks to return"),
 ):
     """Return example tracks for each genre."""
     samples = data.sample_popular_by_genres(genres, limit)
@@ -39,10 +40,18 @@ def genre_samples(
 @router.post("/recommend", response_model=ContentResponse)
 def recommend(req: ContentRequest):
     """Return initial or feedback-refined recommendations."""
+    # Save feedback from liked and disliked URIs
+    if req.liked_uris or req.disliked_uris:
+        updater.update(
+            liked_uris=req.liked_uris,
+            disliked_uris=req.disliked_uris,
+        )
+
     recs = recommender.recommend(
         k=req.k or DEFAULT_K,
         seed_genres=req.seed_genres,
-        seed_uris=req.seed_uris,
+        liked_uris=req.liked_uris,
+        disliked_uris=req.disliked_uris,
     )
     return ContentResponse(recommendations=recs)
 
@@ -57,7 +66,6 @@ def feedback(req: FeedbackRequest):
     recs = recommender.recommend(
         k=req.k or DEFAULT_K,
         seed_genres=req.seed_genres,
-        seed_uris=req.seed_uris,
         liked_uris=req.liked_uris,
         disliked_uris=req.disliked_uris,
     )

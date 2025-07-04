@@ -137,7 +137,7 @@ const App: FC = () => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     seed_genres: selectedGenres,
-                    seed_uris: likedSamples,
+                    liked_uris: likedSamples,
                     disliked_uris: dislikedSamples,
                     k: songCount
                 }),
@@ -161,7 +161,6 @@ const App: FC = () => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     seed_genres: selectedGenres,
-                    seed_uris: likedSamples,
                     liked_uris: likedRecs,
                     disliked_uris: dislikedRecs,
                     k: songCount
