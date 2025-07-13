@@ -161,27 +161,7 @@ The application uses the following configuration (see `app/core/config.py`):
 - **TypeScript**: Full type safety for better development experience
 - **ESLint**: Code linting and formatting
 
-### Testing
-
-```bash
-# Backend tests
-cd app
-python -m pytest
-
-# Frontend tests
-cd frontend
-npm test
-```
-
 ## 🐳 Docker
-
-### Production Build
-
-```bash
-# Build and run production containers
-docker-compose -f docker-compose.prod.yml up --build
-```
-
 ### Development with Docker
 
 ```bash
