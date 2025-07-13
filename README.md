@@ -183,6 +183,8 @@ The system uses a dataset of top 10,000 songs from 1950 to present, including:
 - Genre classifications
 - User feedback data
 
+**Dataset Source**: [Top 10000 Spotify Songs 1960-Now](https://www.kaggle.com/datasets/joebeachcapital/top-10000-spotify-songs-1960-now/data) on Kaggle
+
 ## 🆘 Support
 
 If you encounter any issues or have questions:
